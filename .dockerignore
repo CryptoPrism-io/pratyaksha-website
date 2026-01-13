@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs (we build in Docker)
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env
+.env.*
+!.env.local.example
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+
+# Documentation
+README.md
+docs/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+*.spec.ts
+*.test.ts
+
+# Misc
+*.log
+*.md
+.dockerignore
+Dockerfile
+cloudbuild.yaml
