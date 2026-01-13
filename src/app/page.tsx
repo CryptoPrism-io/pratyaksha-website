@@ -1,18 +1,14 @@
 import { Hero } from '@/components/sections/Hero'
+import { HowItWorks } from '@/components/sections/HowItWorks'
 
 export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
 
-      {/* Placeholder sections */}
-      <section className="min-h-screen flex items-center justify-center bg-muted/20">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-          <p className="text-muted-foreground">4-Agent Pipeline Section</p>
-        </div>
-      </section>
+      <HowItWorks />
 
+      {/* Placeholder sections */}
       <section className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">21 Powerful Visualizations</h2>
