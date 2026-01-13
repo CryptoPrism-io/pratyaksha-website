@@ -1,6 +1,10 @@
 import { Hero } from '@/components/sections/Hero'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Features } from '@/components/sections/Features'
+import { Science } from '@/components/sections/Science'
+import { Testimonials } from '@/components/sections/Testimonials'
+import { Pricing } from '@/components/sections/Pricing'
+import { FinalCTA } from '@/components/sections/FinalCTA'
 
 export default function Home() {
   return (
@@ -11,20 +15,13 @@ export default function Home() {
 
       <Features />
 
-      {/* Placeholder sections */}
-      <section className="min-h-screen flex items-center justify-center bg-muted/20">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-4">Built on Science</h2>
-          <p className="text-muted-foreground">Trust & Credibility Section</p>
-        </div>
-      </section>
+      <Science />
 
-      <section className="py-32 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-900">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4">See Your Mind. Clearly.</h2>
-          <p className="text-indigo-200 mb-8">Join the waitlist for early access</p>
-        </div>
-      </section>
+      <Testimonials />
+
+      <Pricing />
+
+      <FinalCTA />
     </main>
   )
 }
