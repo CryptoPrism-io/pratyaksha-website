@@ -37,9 +37,9 @@ export function Hero() {
   }, [inputText])
 
   return (
-    <section className="relative z-20 min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-background">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/50 via-background to-purple-950/30" />
+    <section className="relative z-20 min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+      {/* Background gradient - enhanced with colored orb glows */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/30 via-transparent to-purple-950/20" />
 
       {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -82,7 +82,7 @@ export function Hero() {
         >
           <HeroScene emotionState={emotionState} />
 
-          {/* Emotion feedback badge */}
+          {/* Emotion feedback badge - Enhanced glass styling */}
           <AnimatePresence mode="wait">
             {emotionState.detectedKeyword && (
               <motion.div
@@ -90,17 +90,17 @@ export function Hero() {
                 initial={{ opacity: 0, y: 10, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card"
+                className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card"
                 style={{
-                  borderColor: `${emotionState.color}50`,
-                  boxShadow: `0 0 20px ${emotionState.color}30`,
+                  borderColor: `${emotionState.color}40`,
+                  boxShadow: `0 0 12px rgba(255, 255, 255, 0.05), 0 0 25px ${emotionState.color}25, inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
                 }}
               >
                 <div
-                  className="w-2 h-2 rounded-full animate-pulse"
+                  className="w-2.5 h-2.5 rounded-full animate-pulse-glow"
                   style={{ backgroundColor: emotionState.color }}
                 />
-                <span className="text-sm font-medium capitalize">
+                <span className="text-sm font-medium capitalize text-white-85">
                   Detecting: {emotionState.detectedKeyword}
                 </span>
               </motion.div>
@@ -108,21 +108,21 @@ export function Hero() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline - Enhanced typography */}
         <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 font-display tracking-tight"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, delay: 0.2 }}
         >
-          <span className="text-foreground">Your Mind,</span>
+          <span className="text-white-95">Your Mind,</span>
           <br />
-          <span className="gradient-text">Visualized.</span>
+          <span className="gradient-text text-shadow-data">Visualized.</span>
         </motion.h1>
 
-        {/* Tagline */}
+        {/* Tagline - Enhanced with text hierarchy */}
         <motion.p
-          className="text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 max-w-2xl mx-auto"
+          className="text-lg md:text-xl text-white-70 leading-relaxed mb-8 max-w-2xl mx-auto font-light"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, delay: 0.4 }}
@@ -131,7 +131,7 @@ export function Hero() {
           energy states, and actionable insights you&apos;ve never seen before.
         </motion.p>
 
-        {/* Interactive input */}
+        {/* Interactive input - Premium glass card */}
         <motion.div
           className="mb-8 max-w-md mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -139,14 +139,14 @@ export function Hero() {
           transition={{ duration: 1.0, delay: 0.6 }}
         >
           <div
-            className="glass-card p-2 transition-colors duration-300"
+            className="glass-card-premium p-3 transition-all duration-300"
             style={{
               boxShadow: inputText
-                ? `0 0 30px ${emotionState.color}30`
-                : 'none',
+                ? `0 0 12px rgba(255, 255, 255, 0.06), 0 0 40px ${emotionState.color}25, 0 16px 64px rgba(0, 0, 0, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.15)`
+                : undefined,
               borderColor: inputText
-                ? `${emotionState.color}30`
-                : 'rgba(255, 255, 255, 0.1)',
+                ? `${emotionState.color}40`
+                : undefined,
             }}
           >
             <Input

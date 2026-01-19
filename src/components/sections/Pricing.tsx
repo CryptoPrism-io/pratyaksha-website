@@ -18,20 +18,33 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
 
   return (
     <motion.div
-      className={`relative rounded-2xl overflow-hidden ${
+      className={`relative rounded-3xl overflow-hidden ${
         isRecommended
-          ? 'bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border-2 border-primary'
-          : 'glass-card border border-white/10'
+          ? 'bg-gradient-to-br from-indigo-900/30 to-purple-900/30'
+          : ''
       }`}
+      style={{
+        backdropFilter: 'blur(24px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(150%)',
+        border: isRecommended
+          ? '1px solid rgba(99, 102, 241, 0.5)'
+          : '0.5px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: isRecommended
+          ? '0 0 20px rgba(99, 102, 241, 0.2), 0 0 40px rgba(99, 102, 241, 0.1), 0 16px 64px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.1)'
+          : '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+        background: isRecommended
+          ? undefined
+          : 'rgba(0, 0, 0, 0.12)',
+      }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.02, y: -4 }}
+      transition={{ duration: 0.4 }}
     >
       {/* Recommended badge */}
       {badge && (
-        <div className="absolute top-0 right-0 bg-primary text-white text-xs font-semibold px-4 py-1 rounded-bl-lg">
+        <div className="absolute top-0 right-0 bg-gradient-to-r from-primary to-secondary text-white text-xs font-semibold px-4 py-1.5 rounded-bl-2xl">
           {badge}
         </div>
       )}
@@ -42,15 +55,15 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
           {isRecommended ? (
             <Star className="w-5 h-5 text-primary" />
           ) : (
-            <Zap className="w-5 h-5 text-muted-foreground" />
+            <Zap className="w-5 h-5 text-white-60" />
           )}
-          <h3 className="text-xl font-semibold text-white">{name}</h3>
+          <h3 className="text-xl font-semibold text-white-95 font-display">{name}</h3>
         </div>
 
-        {/* Price */}
+        {/* Price - Enhanced typography */}
         <div className="mb-6">
-          <span className="text-4xl font-bold text-white">${price}</span>
-          <span className="text-muted-foreground">/month</span>
+          <span className="text-5xl font-bold text-white-95 font-data text-shadow-data">${price}</span>
+          <span className="text-white-55">/month</span>
         </div>
 
         {/* Features list */}
@@ -60,7 +73,7 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
               <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
                 isRecommended ? 'text-primary' : 'text-emerald-400'
               }`} />
-              <span className="text-muted-foreground">{feature}</span>
+              <span className="text-white-70">{feature}</span>
             </li>
           ))}
         </ul>
@@ -80,24 +93,24 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
 
 export function Pricing() {
   return (
-    <section className="py-16 md:py-24 bg-slate-950/50 relative overflow-hidden">
+    <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-slate-950/50 to-black/50" />
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/6 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
       <div className="relative max-w-4xl mx-auto px-4">
-        {/* Header */}
+        {/* Header - Enhanced typography */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Simple, Transparent Pricing
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 font-display tracking-tight">
+            <span className="text-white-95">Simple, </span>
+            <span className="gradient-text">Transparent Pricing</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-white-60 font-light">
             Start free, upgrade when you need more
           </p>
         </motion.div>

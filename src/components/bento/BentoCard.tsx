@@ -71,12 +71,17 @@ export function BentoCard({
     <motion.div
       tabIndex={0}
       className={cn(
-        'relative rounded-2xl overflow-hidden cursor-pointer group',
-        'border border-white/10',
+        'relative rounded-3xl overflow-hidden cursor-pointer group',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         sizeClasses[size],
         heightClasses[size]
       )}
+      style={{
+        backdropFilter: 'blur(20px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+        border: '0.5px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       initial={{ opacity: 0, y: 20 }}
@@ -85,11 +90,12 @@ export function BentoCard({
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{
         scale: 1.02,
-        transition: { duration: 0.5 },
+        y: -4,
+        transition: { duration: 0.4 },
       }}
     >
       {/* Background gradient */}
-      <div className={cn('absolute inset-0 bg-gradient-to-br', gradient)} />
+      <div className={cn('absolute inset-0 bg-gradient-to-br opacity-80', gradient)} />
 
       {/* Animated glow on hover */}
       <motion.div
@@ -113,19 +119,19 @@ export function BentoCard({
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
 
       {/* Text content */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-30">
+      <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
         <motion.h3
-          className="text-lg font-semibold text-white mb-1"
+          className="text-lg font-semibold text-white-95 mb-1 font-display"
           animate={{ y: isHovered ? -4 : 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
           {title}
         </motion.h3>
         <motion.p
-          className="text-sm text-gray-300"
+          className="text-sm text-white-60"
           initial={{ opacity: 0.7 }}
           animate={{ opacity: isHovered ? 1 : 0.7 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
           {description}
         </motion.p>
@@ -133,9 +139,13 @@ export function BentoCard({
 
       {/* Hover border effect */}
       <motion.div
-        className="absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 pointer-events-none z-40"
+        className="absolute inset-0 rounded-3xl pointer-events-none z-40"
+        style={{
+          border: '1px solid rgba(99, 102, 241, 0.5)',
+          boxShadow: '0 0 20px rgba(99, 102, 241, 0.2), inset 0 0 20px rgba(99, 102, 241, 0.05)',
+        }}
         animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
       />
 
       {/* Corner accent */}

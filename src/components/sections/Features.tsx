@@ -67,15 +67,12 @@ const charts = [
 export function Features() {
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background" />
-
-      {/* Decorative blurs */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
+      {/* Decorative blurs - subtle colored orbs */}
+      <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/8 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-secondary/6 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4">
-        {/* Section header */}
+        {/* Section header - Enhanced typography */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
@@ -83,22 +80,22 @@ export function Features() {
           viewport={{ once: true }}
         >
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-subtle indicator-info mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
           >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm text-primary font-medium">21 Visualizations</span>
+            <Sparkles className="w-4 h-4" />
+            <span className="text-sm font-medium">21 Visualizations</span>
           </motion.div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            <span className="text-foreground">Visualize Your Mind</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 font-display tracking-tight">
+            <span className="text-white-95">Visualize Your Mind</span>
             <br />
-            <span className="gradient-text">with Powerful Charts</span>
+            <span className="gradient-text text-shadow-data">with Powerful Charts</span>
           </h2>
 
-          <p className="text-lg md:text-xl text-foreground/80 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-white-70 leading-relaxed max-w-2xl mx-auto font-light">
             From emotional timelines to contradiction tracking, gain insights
             you&apos;ve never had before.
           </p>
@@ -123,7 +120,7 @@ export function Features() {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-muted-foreground mb-6">
+          <p className="text-white-60 mb-6">
             Plus <span className="text-primary font-semibold">13 more visualizations</span> in the full dashboard
           </p>
 

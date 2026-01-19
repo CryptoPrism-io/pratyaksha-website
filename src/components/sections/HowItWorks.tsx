@@ -58,32 +58,32 @@ export function HowItWorks() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[400vh] bg-gradient-to-b from-background via-muted/10 to-background"
+      className="relative min-h-[400vh]"
     >
       {/* Sticky container */}
       <div className="sticky top-0 min-h-screen flex items-center justify-center overflow-hidden py-16">
         <div className="max-w-6xl mx-auto px-4 w-full">
-          {/* Section header */}
+          {/* Section header - Enhanced typography */}
           <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="gradient-text">How It Works</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 font-display tracking-tight">
+              <span className="gradient-text text-shadow-data">How It Works</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-white-60 max-w-2xl mx-auto font-light">
               Watch as our 4-agent AI pipeline analyzes your thoughts in real-time
             </p>
           </motion.div>
 
           {/* Main content grid */}
-          <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-start">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-10 items-start">
             {/* Left side - Sample entry */}
             <div className="lg:sticky lg:top-32">
-              <div className="glass-card p-8 rounded-2xl">
-                <p className="text-sm text-muted-foreground mb-4 uppercase tracking-wide">
+              <div className="glass-card-premium p-8">
+                <p className="text-sm text-white-55 mb-4 uppercase tracking-wider font-medium">
                   Sample Journal Entry
                 </p>
                 <SampleEntry
