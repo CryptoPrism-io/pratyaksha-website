@@ -34,10 +34,10 @@ export function AgentCard({ agent, name, description, isActive, progress, childr
   return (
     <motion.div
       className={cn(
-        'rounded-2xl p-6 backdrop-blur-lg border transition-all duration-500',
+        'rounded-2xl p-6 backdrop-blur-lg border transition-colors duration-300',
         isActive
           ? `bg-gradient-to-br ${colors.bg} ${colors.border} shadow-lg ${colors.glow}`
-          : 'bg-white/5 border-white/10 opacity-40'
+          : 'bg-white/5 border-white/10 opacity-40 hover:bg-white/8 hover:border-white/15'
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{
@@ -45,15 +45,15 @@ export function AgentCard({ agent, name, description, isActive, progress, childr
         y: 0,
         scale: isActive ? 1 : 0.98,
       }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.8 }}
     >
       <div className="flex items-center gap-3 mb-4">
         <div className={cn(
-          'w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500',
+          'w-12 h-12 rounded-xl flex items-center justify-center transition-[background-image,background-color] duration-500',
           isActive ? `bg-gradient-to-br ${colors.bg}` : 'bg-white/5'
         )}>
           <Icon className={cn(
-            'w-6 h-6 transition-all duration-500',
+            'w-6 h-6 transition-colors duration-500',
             isActive ? 'text-white animate-pulse' : 'text-gray-500'
           )} />
         </div>
@@ -68,7 +68,7 @@ export function AgentCard({ agent, name, description, isActive, progress, childr
         )}
       </div>
       <div className={cn(
-        'transition-all duration-500 overflow-hidden',
+        'transition-[opacity,max-height] duration-500 overflow-hidden',
         isActive ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
       )}>
         {children}

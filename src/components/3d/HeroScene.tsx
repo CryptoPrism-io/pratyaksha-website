@@ -31,7 +31,7 @@ function StaticBrainFallback({ emotionState }: HeroSceneProps) {
         style={{ backgroundColor: emotionState.color }}
       />
       <div
-        className="absolute inset-4 rounded-full glass-card flex items-center justify-center transition-all duration-500"
+        className="absolute inset-4 rounded-full glass-card flex items-center justify-center transition-[box-shadow,border-color] duration-500"
         style={{
           boxShadow: `0 0 60px ${emotionState.color}40`,
           borderColor: `${emotionState.color}30`,

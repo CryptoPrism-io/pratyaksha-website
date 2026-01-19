@@ -68,7 +68,7 @@ export function SampleEntry({ activeAgent, progress }: SampleEntryProps) {
         <motion.span
           key={`highlight-${idx}`}
           className={cn(
-            'relative inline-block px-1 py-0.5 rounded transition-all duration-500',
+            'relative inline-block px-1 py-0.5 rounded transition-colors duration-500',
             shouldHighlight ? `${colors.bg} ${colors.text}` : 'text-muted-foreground'
           )}
           initial={{ backgroundColor: 'transparent' }}

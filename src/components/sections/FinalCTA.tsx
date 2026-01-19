@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Check, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 function AnimatedCounter({ end, duration = 2 }: { end: number; duration?: number }) {
   const [count, setCount] = useState(0)
@@ -61,7 +62,7 @@ export function FinalCTA() {
   }
 
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section className="py-16 md:py-32 relative overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-900" />
 
@@ -95,7 +96,7 @@ export function FinalCTA() {
       <div className="relative z-10 max-w-2xl mx-auto px-4 text-center">
         {/* Main heading */}
         <motion.h2
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -127,20 +128,21 @@ export function FinalCTA() {
         >
           {status !== 'success' ? (
             <>
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email..."
                 required
                 disabled={status === 'loading'}
-                className="px-6 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent w-full sm:w-80 backdrop-blur-sm disabled:opacity-50"
+                variant="pill"
+                className="px-6 py-4 h-auto w-full sm:w-80"
               />
               <Button
                 type="submit"
                 disabled={status === 'loading'}
                 size="lg"
-                className="rounded-full bg-white text-indigo-900 font-semibold hover:bg-indigo-100 transition-all px-8 disabled:opacity-50"
+                variant="hero"
               >
                 {status === 'loading' ? (
                   <>

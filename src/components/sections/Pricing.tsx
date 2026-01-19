@@ -27,7 +27,7 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5 }}
     >
       {/* Recommended badge */}
       {badge && (
@@ -67,11 +67,8 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
 
         {/* CTA button */}
         <Button
-          className={`w-full ${
-            isRecommended
-              ? 'bg-primary hover:bg-primary/90 glow-hover'
-              : 'bg-white/10 hover:bg-white/20 border border-white/20'
-          }`}
+          className="w-full"
+          variant={isRecommended ? 'glow' : 'glass'}
           size="lg"
         >
           {cta}
@@ -83,7 +80,7 @@ function PricingCard({ name, price, features, cta, variant, badge }: PricingCard
 
 export function Pricing() {
   return (
-    <section className="py-24 bg-slate-950/50 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-slate-950/50 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-slate-950/50 to-black/50" />
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
@@ -106,7 +103,7 @@ export function Pricing() {
         </motion.div>
 
         {/* Pricing cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {/* Free Tier */}
           <PricingCard
             name="Free"

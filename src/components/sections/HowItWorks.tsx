@@ -68,9 +68,9 @@ export function HowItWorks() {
             className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 1.0 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="gradient-text">How It Works</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -79,7 +79,7 @@ export function HowItWorks() {
           </motion.div>
 
           {/* Main content grid */}
-          <div className="grid lg:grid-cols-2 gap-8 items-start">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-start">
             {/* Left side - Sample entry */}
             <div className="lg:sticky lg:top-32">
               <div className="glass-card p-8 rounded-2xl">
@@ -97,7 +97,7 @@ export function HowItWorks() {
                 {(['intent', 'emotion', 'theme', 'insight'] as const).map((agent, idx) => (
                   <div
                     key={agent}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`w-2 h-2 rounded-full transition-[width,background-color] duration-300 ${
                       activeAgent === agent
                         ? 'w-8 bg-primary'
                         : activeAgent === 'none' ||

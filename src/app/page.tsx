@@ -1,4 +1,5 @@
 import { Hero } from '@/components/sections/Hero'
+import { ScrollStory } from '@/components/sections/ScrollStory'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Features } from '@/components/sections/Features'
 import { Science } from '@/components/sections/Science'
@@ -10,6 +11,8 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
+
+      <ScrollStory />
 
       <HowItWorks />
 

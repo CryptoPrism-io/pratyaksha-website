@@ -1,0 +1,17 @@
+{
+  "sections": [
+    "1-logo",
+    "2-logo-brain",
+    "3-brain-agent",
+    "4-agent-viz"
+  ],
+  "desktop": {
+    "framesPerSection": 96,
+    "format": "jpg"
+  },
+  "mobile": {
+    "framesPerSection": 48,
+    "format": "jpg"
+  },
+  "generated": "2026-01-18T17:25:14.738Z"
+}

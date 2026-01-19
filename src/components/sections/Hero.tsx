@@ -37,7 +37,7 @@ export function Hero() {
   }, [inputText])
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+    <section className="relative z-20 min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-background">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/50 via-background to-purple-950/30" />
 
@@ -110,22 +110,22 @@ export function Hero() {
 
         {/* Headline */}
         <motion.h1
-          className="text-5xl md:text-7xl font-bold mb-6"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 1.0, delay: 0.2 }}
         >
-          <span className="gradient-text">Your Mind,</span>
+          <span className="text-foreground">Your Mind,</span>
           <br />
-          <span className="text-foreground">Visualized.</span>
+          <span className="gradient-text">Visualized.</span>
         </motion.h1>
 
         {/* Tagline */}
         <motion.p
-          className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+          className="text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 1.0, delay: 0.4 }}
         >
           AI-powered cognitive journaling that reveals emotional patterns,
           energy states, and actionable insights you&apos;ve never seen before.
@@ -136,10 +136,10 @@ export function Hero() {
           className="mb-8 max-w-md mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 1.0, delay: 0.6 }}
         >
           <div
-            className="glass-card p-1 transition-all duration-300"
+            className="glass-card p-2 transition-colors duration-300"
             style={{
               boxShadow: inputText
                 ? `0 0 30px ${emotionState.color}30`
@@ -154,7 +154,8 @@ export function Hero() {
               placeholder="Write how you're feeling..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              className="bg-transparent border-0 text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0 h-12"
+              variant="hero"
+              className="text-lg placeholder:text-muted-foreground/50 h-12"
             />
           </div>
 
@@ -182,19 +183,19 @@ export function Hero() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 1.0, delay: 0.8 }}
         >
           <Button
-            size="lg"
-            className="glow-hover transition-all duration-300"
+            size="xl"
+            variant="glow"
             style={{
               boxShadow: `0 0 20px ${emotionState.color}40`,
             }}
           >
             See Your Mind
-            <ArrowRight className="ml-2 w-4 h-4" />
+            <ArrowRight className="w-5 h-5" />
           </Button>
-          <Button size="lg" variant="outline" className="glass-card border-0">
+          <Button size="lg" variant="glass">
             Watch Demo
           </Button>
         </motion.div>

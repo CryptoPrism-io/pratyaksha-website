@@ -66,7 +66,7 @@ const charts = [
 
 export function Features() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background" />
 
@@ -92,20 +92,20 @@ export function Features() {
             <span className="text-sm text-primary font-medium">21 Visualizations</span>
           </motion.div>
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Visualize Your Mind</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <span className="text-foreground">Visualize Your Mind</span>
             <br />
-            <span className="text-foreground">with Powerful Charts</span>
+            <span className="gradient-text">with Powerful Charts</span>
           </h2>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-foreground/80 leading-relaxed max-w-2xl mx-auto">
             From emotional timelines to contradiction tracking, gain insights
             you&apos;ve never had before.
           </p>
         </motion.div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
           {charts.map((chart, index) => (
             <BentoCard
               key={chart.title}
@@ -128,11 +128,11 @@ export function Features() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="glow-hover">
+            <Button size="xl" variant="glow">
               Start Journaling Free
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="glass-card border-0">
+            <Button size="lg" variant="glass">
               Explore All Charts
             </Button>
           </div>

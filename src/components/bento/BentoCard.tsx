@@ -69,9 +69,11 @@ export function BentoCard({
 
   return (
     <motion.div
+      tabIndex={0}
       className={cn(
         'relative rounded-2xl overflow-hidden cursor-pointer group',
         'border border-white/10',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         sizeClasses[size],
         heightClasses[size]
       )}
@@ -83,7 +85,7 @@ export function BentoCard({
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{
         scale: 1.02,
-        transition: { duration: 0.3 },
+        transition: { duration: 0.5 },
       }}
     >
       {/* Background gradient */}
@@ -100,7 +102,7 @@ export function BentoCard({
       {/* Chart preview */}
       <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
         <div className={cn(
-          'w-full transition-all duration-500',
+          'w-full transition-[height] duration-500',
           size === '2x2' ? 'h-3/4' : 'h-full'
         )}>
           <ChartComponent isHovered={isHovered} />
@@ -115,7 +117,7 @@ export function BentoCard({
         <motion.h3
           className="text-lg font-semibold text-white mb-1"
           animate={{ y: isHovered ? -4 : 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
           {title}
         </motion.h3>
@@ -123,7 +125,7 @@ export function BentoCard({
           className="text-sm text-gray-300"
           initial={{ opacity: 0.7 }}
           animate={{ opacity: isHovered ? 1 : 0.7 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
           {description}
         </motion.p>
@@ -133,7 +135,7 @@ export function BentoCard({
       <motion.div
         className="absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 pointer-events-none z-40"
         animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.5 }}
       />
 
       {/* Corner accent */}
