@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { type StepConfig, STEPS, TEXT_STEP_INDICES } from '@/hooks/useStepScroll'
+import { ArrowRight, Sparkles } from 'lucide-react'
 
 interface StepNavbarProps {
   currentStep: number
@@ -9,58 +10,57 @@ interface StepNavbarProps {
   onNavigate: (textStepIndex: number) => void
 }
 
+// Journey step labels - evocative story arc
+const JOURNEY_STEPS = [
+  { label: 'Awaken', shortLabel: 'I' },
+  { label: 'The Chaos', shortLabel: 'II' },
+  { label: 'The Shift', shortLabel: 'III' },
+  { label: 'The Light', shortLabel: 'IV' },
+  { label: 'Begin', shortLabel: 'V' },
+]
+
 export function StepNavbar({ currentStep, totalSteps, stepConfig, isLocked, onNavigate }: StepNavbarProps) {
-  // Get text step labels (only show text steps in progress)
   const textSteps = STEPS.filter(s => s.type === 'text')
   const currentTextStepIndex = textSteps.findIndex(s =>
     s.state === stepConfig.state && s.type === 'text'
   )
-
-  // Calculate overall progress (0-100)
-  const overallProgress = Math.round((currentStep / (totalSteps - 1)) * 100)
+  const isAtEnd = currentStep === totalSteps - 1
 
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6"
-      style={{ paddingTop: 'calc(1rem + env(safe-area-inset-top, 0px))' }}
+      transition={{ delay: 0.3, duration: 0.6 }}
+      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6"
+      style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top, 0px))' }}
       role="navigation"
       aria-label="Experience navigation"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur flex items-center justify-center">
-            <span className="text-sm font-bold text-white">P</span>
-          </div>
-          <span className="text-white/80 font-medium hidden sm:block">Pratyaksha</span>
-        </div>
-
-        {/* Center - Section indicator */}
-        <div className="flex flex-col items-center gap-2">
-          {/* Current section label */}
-          <motion.span
-            key={stepConfig.label || 'transitioning'}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-white/60 text-xs uppercase tracking-wider"
+      <div className="max-w-6xl mx-auto">
+        {/* Main navbar row */}
+        <div className="flex items-center justify-between h-12">
+          {/* Logo */}
+          <motion.a
+            href="#"
+            className="flex items-center gap-2 group"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {stepConfig.type === 'animation' ? 'Transitioning...' : stepConfig.label}
-          </motion.span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-colors">
+              <Sparkles className="w-4 h-4 text-white" />
+            </div>
+            <div className="hidden sm:flex flex-col">
+              <span className="text-white font-semibold text-sm leading-tight">Pratyaksha</span>
+              <span className="text-white/40 text-[10px] leading-tight">Cognitive Journal</span>
+            </div>
+          </motion.a>
 
-          {/* Step progress dots - clickable with accessibility */}
-          <div
-            className="flex items-center gap-2"
-            role="tablist"
-            aria-label="Experience sections"
-          >
-            {textSteps.map((step, idx) => {
+          {/* Center - Journey Timeline (desktop) */}
+          <div className="hidden md:flex items-center gap-1" role="tablist" aria-label="Journey sections">
+            {JOURNEY_STEPS.map((step, idx) => {
               const isActive = currentTextStepIndex >= idx
               const isCurrent = currentTextStepIndex === idx && stepConfig.type === 'text'
-              const stepIndex = TEXT_STEP_INDICES[idx]
-              const canClick = !isLocked && stepIndex !== currentStep
+              const canClick = !isLocked && TEXT_STEP_INDICES[idx] !== currentStep
 
               return (
                 <div key={idx} className="flex items-center">
@@ -69,67 +69,97 @@ export function StepNavbar({ currentStep, totalSteps, stepConfig, isLocked, onNa
                     disabled={isLocked}
                     role="tab"
                     aria-selected={isCurrent}
-                    aria-label={`Go to ${step.label} section${isCurrent ? ' (current)' : ''}`}
-                    tabIndex={canClick ? 0 : -1}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 touch-feedback focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent ${
+                    aria-label={`Go to ${step.label} section`}
+                    className={`relative px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
                       isCurrent
-                        ? 'bg-white scale-150'
+                        ? 'text-white'
                         : isActive
-                          ? 'bg-white/60'
-                          : 'bg-white/20'
-                    } ${canClick ? 'cursor-pointer hover:scale-125 hover:bg-white/80' : 'cursor-default'}`}
-                    animate={isCurrent ? { scale: [1.5, 1.8, 1.5] } : {}}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    title={step.label}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        canClick && onNavigate(idx)
-                      } else if (e.key === 'ArrowRight' && idx < textSteps.length - 1) {
-                        e.preventDefault()
-                        onNavigate(idx + 1)
-                      } else if (e.key === 'ArrowLeft' && idx > 0) {
-                        e.preventDefault()
-                        onNavigate(idx - 1)
-                      }
-                    }}
-                  />
-                  {idx < textSteps.length - 1 && (
-                    <div
-                      className={`w-6 h-0.5 mx-1 transition-colors ${isActive ? 'bg-white/40' : 'bg-white/10'}`}
-                      aria-hidden="true"
-                    />
+                          ? 'text-white/70 hover:text-white'
+                          : 'text-white/40 hover:text-white/60'
+                    } ${canClick ? 'cursor-pointer' : 'cursor-default'}`}
+                    whileHover={canClick ? { scale: 1.05 } : {}}
+                    whileTap={canClick ? { scale: 0.95 } : {}}
+                  >
+                    {/* Active background pill */}
+                    {isCurrent && (
+                      <motion.div
+                        layoutId="activeStep"
+                        className="absolute inset-0 bg-white/15 backdrop-blur-sm rounded-full border border-white/20"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{step.label}</span>
+                  </motion.button>
+
+                  {/* Connector line */}
+                  {idx < JOURNEY_STEPS.length - 1 && (
+                    <div className={`w-4 h-px mx-0.5 transition-colors duration-300 ${
+                      currentTextStepIndex > idx ? 'bg-white/40' : 'bg-white/10'
+                    }`} />
                   )}
                 </div>
               )
             })}
           </div>
+
+          {/* Mobile - Compact step indicator */}
+          <div className="flex md:hidden items-center gap-2">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={stepConfig.label}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="text-white/80 text-sm font-medium"
+              >
+                {stepConfig.type === 'animation' ? '...' : JOURNEY_STEPS[currentTextStepIndex]?.label || ''}
+              </motion.span>
+            </AnimatePresence>
+            <div className="flex items-center gap-1">
+              {JOURNEY_STEPS.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => !isLocked && onNavigate(idx)}
+                  disabled={isLocked}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    currentTextStepIndex === idx
+                      ? 'bg-white w-4'
+                      : currentTextStepIndex > idx
+                        ? 'bg-white/50'
+                        : 'bg-white/20'
+                  }`}
+                  aria-label={`Go to ${JOURNEY_STEPS[idx].label}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Right - CTA Button */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => !isAtEnd && onNavigate(4)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              isAtEnd
+                ? 'bg-white text-gray-900 shadow-lg shadow-white/20'
+                : 'bg-white/10 text-white border border-white/20 hover:bg-white/20 hover:border-white/30'
+            }`}
+          >
+            <span className="hidden sm:inline">{isAtEnd ? 'Start Your Journey' : 'Skip Ahead'}</span>
+            <span className="sm:hidden">{isAtEnd ? 'Begin' : 'Skip'}</span>
+            <ArrowRight className="w-4 h-4" />
+          </motion.button>
         </div>
 
-        {/* Right side - Progress percentage */}
-        <div className="flex items-center gap-3">
-          <span className="text-white/40 text-xs font-mono">
-            {overallProgress}%
-          </span>
-
-          {/* Lock indicator */}
-          {isLocked && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="w-2 h-2 rounded-full bg-yellow-400/60"
-            />
-          )}
+        {/* Progress bar - subtle and elegant */}
+        <div className="mt-2 h-px bg-white/5 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-white/30 via-white/50 to-white/30"
+            initial={{ width: '0%' }}
+            animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+          />
         </div>
-      </div>
-
-      {/* Full-width progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
-        <motion.div
-          className="h-full bg-white/30"
-          style={{ width: `${overallProgress}%` }}
-          transition={{ duration: 0.3 }}
-        />
       </div>
     </motion.nav>
   )

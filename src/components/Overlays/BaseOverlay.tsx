@@ -12,15 +12,27 @@ export function BaseOverlay({ isVisible, children, className }: BaseOverlayProps
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className={cn('overlay-container content-overlay', className)}
-        >
-          {children}
-        </motion.div>
+        <>
+          {/* Animated backdrop blur - starts first */}
+          <motion.div
+            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(12px)' }}
+            exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed inset-0 z-[9] bg-black/30"
+            style={{ WebkitBackdropFilter: 'blur(12px)' }}
+          />
+          {/* Content overlay - no delay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className={cn('overlay-container content-overlay', className)}
+          >
+            {children}
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   )
