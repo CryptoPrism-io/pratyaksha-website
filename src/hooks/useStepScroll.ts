@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { STATES, type BrainState } from '@/lib/constants'
 
 // Step configuration
@@ -31,6 +31,14 @@ const ANIMATION_DURATION = 2000
 
 type Direction = 'forward' | 'backward'
 
+// Cross-fade timing configuration
+const EXIT_END = 0.35       // Exiting overlay fully faded by 35% animation
+const ENTER_START = 0.55    // Entering overlay starts fading in at 55%
+const ENTER_END = 1.0       // Entering overlay fully visible at 100%
+
+// Overlay opacity map for smooth cross-fades
+export type OverlayOpacities = Record<BrainState, { opacity: number; isPreloading: boolean }>
+
 interface StepScrollState {
   currentStep: number
   stepConfig: StepConfig
@@ -40,6 +48,8 @@ interface StepScrollState {
   totalSteps: number
   direction: Direction
   navigateToTextStep: (textStepIndex: number) => void
+  // New: opacity map for all overlays (supports cross-fade)
+  overlayOpacities: OverlayOpacities
 }
 
 export function useStepScroll(): StepScrollState {
@@ -302,6 +312,77 @@ export function useStepScroll(): StepScrollState {
     }
   }, [currentStep, isLocked, goToStep])
 
+  // Calculate opacity map for all overlays (supports cross-fade) - memoized for performance
+  const overlayOpacities = useMemo((): OverlayOpacities => {
+    // Initialize all to hidden
+    const opacities: OverlayOpacities = {
+      [STATES.DORMANT]: { opacity: 0, isPreloading: false },
+      [STATES.CHAOS]: { opacity: 0, isPreloading: false },
+      [STATES.ORGANIZING]: { opacity: 0, isPreloading: false },
+      [STATES.ILLUMINATED]: { opacity: 0, isPreloading: false },
+      [STATES.RADIANT]: { opacity: 0, isPreloading: false },
+    }
+
+    const currentConfig = STEPS[currentStep]
+
+    // If current step is text, show that overlay at full opacity
+    if (currentConfig.type === 'text') {
+      opacities[currentConfig.state] = { opacity: 1, isPreloading: false }
+      return opacities
+    }
+
+    // Current step is animation - handle cross-fade
+    const prevStep = currentStep - 1
+    const nextStep = currentStep + 1
+
+    if (direction === 'forward') {
+      // Forward: previous text overlay fades out, next text overlay fades in
+
+      // Find the previous text step's state (what we're exiting FROM)
+      if (prevStep >= 0 && STEPS[prevStep].type === 'text') {
+        const exitState = STEPS[prevStep].state
+        // Fade out: full at 0%, gone by EXIT_END
+        const exitOpacity = Math.max(0, 1 - (animationProgress / EXIT_END))
+        opacities[exitState] = { opacity: exitOpacity, isPreloading: false }
+      }
+
+      // Find the next text step's state (what we're entering TO)
+      if (nextStep < STEPS.length && STEPS[nextStep].type === 'text') {
+        const enterState = STEPS[nextStep].state
+        // Fade in: starts at ENTER_START, full at ENTER_END
+        if (animationProgress >= ENTER_START) {
+          const enterOpacity = (animationProgress - ENTER_START) / (ENTER_END - ENTER_START)
+          opacities[enterState] = { opacity: Math.min(enterOpacity, 1), isPreloading: true }
+        }
+      }
+    } else {
+      // Backward: animation progress goes 1 → 0
+      // Previous text overlay fades in, next text overlay fades out
+
+      // The "next" step (higher index) is what we're exiting FROM
+      if (nextStep < STEPS.length && STEPS[nextStep].type === 'text') {
+        const exitState = STEPS[nextStep].state
+        // Fade out as animation progresses backward (1 → 0)
+        // At progress=1, should be visible; at progress=(1-EXIT_END), should be gone
+        const exitOpacity = Math.max(0, animationProgress / EXIT_END - (1 - EXIT_END) / EXIT_END)
+        opacities[exitState] = { opacity: Math.max(0, Math.min(1, exitOpacity)), isPreloading: false }
+      }
+
+      // The "prev" step (lower index) is what we're entering TO
+      if (prevStep >= 0 && STEPS[prevStep].type === 'text') {
+        const enterState = STEPS[prevStep].state
+        // Fade in as animation progresses backward
+        const reverseProgress = 1 - animationProgress
+        if (reverseProgress >= ENTER_START) {
+          const enterOpacity = (reverseProgress - ENTER_START) / (ENTER_END - ENTER_START)
+          opacities[enterState] = { opacity: Math.min(enterOpacity, 1), isPreloading: true }
+        }
+      }
+    }
+
+    return opacities
+  }, [currentStep, animationProgress, direction])
+
   return {
     currentStep,
     stepConfig,
@@ -311,5 +392,6 @@ export function useStepScroll(): StepScrollState {
     totalSteps: STEPS.length,
     direction,
     navigateToTextStep,
+    overlayOpacities,
   }
 }

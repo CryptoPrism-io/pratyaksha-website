@@ -1,12 +1,16 @@
 import { motion } from 'framer-motion'
-import { BaseOverlay, AnimatedText } from './BaseOverlay'
+import { BaseOverlay, AnimatedText, TypewriterText } from './BaseOverlay'
+import { ChevronDown, Play, ArrowRight } from 'lucide-react'
 
 interface HeroOverlayProps {
   isVisible: boolean
+  onNext?: () => void
+  transitionOpacity?: number
+  isPreloading?: boolean
 }
 
-// Particle configuration for ambient effect
-const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
+// Particle configuration for ambient effect - reduced from 30 to 10 for performance
+const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
   id: i,
   size: Math.random() * 3 + 1,
   x: Math.random() * 100,
@@ -22,9 +26,9 @@ const ORBS = [
   { size: 100, x: '70%', y: '25%', color: 'rgba(236, 72, 153, 0.08)', blur: 50 },
 ]
 
-export function HeroOverlay({ isVisible }: HeroOverlayProps) {
+export function HeroOverlay({ isVisible, onNext, transitionOpacity, isPreloading }: HeroOverlayProps) {
   return (
-    <BaseOverlay isVisible={isVisible}>
+    <BaseOverlay isVisible={isVisible} transitionOpacity={transitionOpacity} isPreloading={isPreloading}>
       <div className="flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-4xl mx-auto relative">
 
         {/* Ambient floating orbs */}
@@ -109,10 +113,19 @@ export function HeroOverlay({ isVisible }: HeroOverlayProps) {
           </p>
         </AnimatedText>
 
-        {/* Subline description */}
+        {/* Subline description with typewriter effect */}
         <AnimatedText delay={0.7} animation="slideUp">
           <p className="text-sm sm:text-base md:text-lg text-white/50 max-w-xl">
-            See your mind clearly. Understand your patterns. Transform your thoughts.
+            <TypewriterText
+              text="See your mind clearly. Understand your patterns. Transform your thoughts."
+              delay={0.5}
+              speed={18}
+              highlights={[
+                { words: ['mind'], color: '#a78bfa', fontClass: 'font-playfair', italic: true },
+                { words: ['patterns'], color: '#60a5fa', fontClass: 'font-syne', uppercase: true },
+                { words: ['Transform'], color: '#34d399', fontClass: 'font-cabinet' },
+              ]}
+            />
           </p>
         </AnimatedText>
 
@@ -123,6 +136,55 @@ export function HeroOverlay({ isVisible }: HeroOverlayProps) {
           transition={{ duration: 0.8, delay: 0.9 }}
           className="mt-8 sm:mt-12 w-24 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
         />
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.1 }}
+          className="mt-8 flex flex-col items-center gap-4"
+        >
+          {/* Primary Actions */}
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <motion.a
+              href="https://pratyaksha-963362833537.asia-south1.run.app/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-2.5 rounded-full bg-white text-gray-900 font-medium text-sm flex items-center gap-2 hover:bg-white/90 transition-colors"
+            >
+              Explore Dashboard
+              <ArrowRight className="w-4 h-4" />
+            </motion.a>
+
+            <motion.a
+              href="https://pratyaksha-963362833537.asia-south1.run.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-2.5 rounded-full border border-white/30 text-white font-medium text-sm flex items-center gap-2 hover:bg-white/10 transition-colors"
+            >
+              <Play className="w-4 h-4" />
+              Watch Demo
+            </motion.a>
+          </div>
+
+          {/* Scroll indicator */}
+          <button
+            onClick={onNext}
+            className="mt-4 group flex flex-col items-center gap-1 text-white/50 hover:text-white/70 transition-colors"
+          >
+            <span className="text-xs tracking-wide">or scroll to explore</span>
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ChevronDown className="w-4 h-4" />
+            </motion.div>
+          </button>
+        </motion.div>
 
         {/* Floating particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

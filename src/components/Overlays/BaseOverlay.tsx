@@ -1,40 +1,69 @@
-import { ReactNode } from 'react'
-import { motion, AnimatePresence, Variants } from 'framer-motion'
+import { ReactNode, useState, useEffect } from 'react'
+import { motion, Variants } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 interface BaseOverlayProps {
   isVisible: boolean
   children: ReactNode
   className?: string
+  // New props for smooth cross-fade transitions
+  transitionOpacity?: number  // 0-1, controlled opacity during animation
+  isPreloading?: boolean      // True when preloading (content fades slower than blur)
 }
 
-export function BaseOverlay({ isVisible, children, className }: BaseOverlayProps) {
+export function BaseOverlay({
+  isVisible,
+  children,
+  className,
+  transitionOpacity = 1,
+  isPreloading = false,
+}: BaseOverlayProps) {
+  // Don't render if not visible and no transition opacity
+  if (!isVisible) return null
+
+  // Calculate actual opacities
+  // During preload: blur comes in faster than content for smooth feel
+  const blurOpacity = transitionOpacity
+  const contentOpacity = isPreloading
+    ? Math.max(0, (transitionOpacity - 0.3) / 0.7)  // Content starts at 30% blur progress
+    : transitionOpacity
+
+  // Use stepped blur values for better GPU performance (avoid constant repaints)
+  // Steps: 0, 4, 8, 12 instead of continuous 0-12
+  const blurSteps = [0, 4, 8, 12]
+  const blurIndex = Math.min(Math.round(blurOpacity * 3), 3)
+  const blurAmount = blurSteps[blurIndex]
+
   return (
-    <AnimatePresence mode="wait">
-      {isVisible && (
-        <>
-          {/* Animated backdrop blur - starts first */}
-          <motion.div
-            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(12px)' }}
-            exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed inset-0 z-[9] bg-black/30"
-            style={{ WebkitBackdropFilter: 'blur(12px)' }}
-          />
-          {/* Content overlay - no delay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className={cn('overlay-container content-overlay', className)}
-          >
-            {children}
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    <>
+      {/* Backdrop blur - leads the transition */}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: blurOpacity,
+        }}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
+        className="fixed inset-0 z-[9] bg-black/30"
+        style={{
+          backdropFilter: `blur(${blurAmount}px)`,
+          WebkitBackdropFilter: `blur(${blurAmount}px)`,
+        }}
+      />
+      {/* Content overlay - follows slightly behind */}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: contentOpacity,
+        }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        className={cn('overlay-container content-overlay', className)}
+        style={{
+          pointerEvents: contentOpacity > 0.5 ? 'auto' : 'none',
+        }}
+      >
+        {children}
+      </motion.div>
+    </>
   )
 }
 
@@ -306,5 +335,119 @@ export function TextReveal({
         </motion.span>
       ))}
     </motion.span>
+  )
+}
+
+// Highlight configuration for keywords
+export interface HighlightConfig {
+  words: string[]
+  color: string
+  underline?: boolean
+  fontClass?: string  // e.g., 'font-playfair', 'font-syne', 'font-space'
+  italic?: boolean
+  bold?: boolean
+  uppercase?: boolean
+}
+
+// Typewriter animation component with keyword highlighting
+export function TypewriterText({
+  text,
+  className,
+  delay = 0,
+  speed = 30,
+  showCursor = true,
+  highlights = [],
+}: {
+  text: string
+  className?: string
+  delay?: number
+  speed?: number // ms per character
+  showCursor?: boolean
+  highlights?: HighlightConfig[]
+}) {
+  const [displayedText, setDisplayedText] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
+
+  useEffect(() => {
+    // Reset when text changes
+    setDisplayedText('')
+    setHasStarted(false)
+    setIsTyping(false)
+
+    // Start after delay
+    const startTimeout = setTimeout(() => {
+      setHasStarted(true)
+      setIsTyping(true)
+    }, delay * 1000)
+
+    return () => clearTimeout(startTimeout)
+  }, [text, delay])
+
+  useEffect(() => {
+    if (!hasStarted || !isTyping) return
+
+    if (displayedText.length < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(text.slice(0, displayedText.length + 1))
+      }, speed)
+      return () => clearTimeout(timeout)
+    } else {
+      setIsTyping(false)
+    }
+  }, [displayedText, text, speed, hasStarted, isTyping])
+
+  // Render text with highlights
+  const renderHighlightedText = (textToRender: string) => {
+    if (highlights.length === 0) return textToRender
+
+    // Build a regex pattern for all highlight words
+    const allWords = highlights.flatMap(h => h.words)
+    if (allWords.length === 0) return textToRender
+
+    // Create pattern that matches whole words (case insensitive)
+    const pattern = new RegExp(`(${allWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
+    const parts = textToRender.split(pattern)
+
+    return parts.map((part, index) => {
+      // Check if this part matches any highlight
+      const highlight = highlights.find(h =>
+        h.words.some(w => w.toLowerCase() === part.toLowerCase())
+      )
+
+      if (highlight) {
+        const classes = [
+          highlight.underline !== false ? 'underline decoration-2 underline-offset-4' : '',
+          highlight.fontClass || '',
+          highlight.italic ? 'italic' : '',
+          highlight.bold !== false ? 'font-semibold' : '',
+          highlight.uppercase ? 'uppercase tracking-wider' : '',
+        ].filter(Boolean).join(' ')
+
+        return (
+          <span
+            key={index}
+            className={classes}
+            style={{ color: highlight.color }}
+          >
+            {part}
+          </span>
+        )
+      }
+      return part
+    })
+  }
+
+  return (
+    <span className={className}>
+      {renderHighlightedText(displayedText)}
+      {showCursor && (
+        <motion.span
+          animate={{ opacity: isTyping ? 1 : [1, 0] }}
+          transition={isTyping ? {} : { duration: 0.5, repeat: Infinity, repeatType: 'reverse' }}
+          className="inline-block ml-0.5 -mb-0.5 w-[2px] h-[1em] bg-current align-middle"
+        />
+      )}
+    </span>
   )
 }

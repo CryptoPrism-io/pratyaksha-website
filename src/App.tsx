@@ -11,14 +11,23 @@ import {
 import { STATES } from '@/lib/constants'
 
 function App() {
-  const { currentStep, stepConfig, animationProgress, isAnimating, isLocked, totalSteps, direction, navigateToTextStep } = useStepScroll()
+  const { currentStep, stepConfig, animationProgress, isAnimating, isLocked, totalSteps, direction, navigateToTextStep, overlayOpacities } = useStepScroll()
 
-  // Determine which text overlay to show (only during text steps)
-  const showHero = stepConfig.type === 'text' && stepConfig.state === STATES.DORMANT
-  const showProblem = stepConfig.type === 'text' && stepConfig.state === STATES.CHAOS
-  const showSolution = stepConfig.type === 'text' && stepConfig.state === STATES.ORGANIZING
-  const showFeatures = stepConfig.type === 'text' && stepConfig.state === STATES.ILLUMINATED
-  const showCTA = stepConfig.type === 'text' && stepConfig.state === STATES.RADIANT
+  // Get overlay props from the opacity map for smooth cross-fade
+  const getOverlayProps = (state: number) => {
+    const overlayState = overlayOpacities[state as keyof typeof overlayOpacities]
+    return {
+      isVisible: overlayState.opacity > 0,
+      transitionOpacity: overlayState.opacity,
+      isPreloading: overlayState.isPreloading,
+    }
+  }
+
+  const heroProps = getOverlayProps(STATES.DORMANT)
+  const problemProps = getOverlayProps(STATES.CHAOS)
+  const solutionProps = getOverlayProps(STATES.ORGANIZING)
+  const featuresProps = getOverlayProps(STATES.ILLUMINATED)
+  const ctaProps = getOverlayProps(STATES.RADIANT)
 
   return (
     <div className="fixed inset-0 overflow-hidden">
@@ -40,12 +49,36 @@ function App() {
         onNavigate={navigateToTextStep}
       />
 
-      {/* Content overlays - only visible during text steps */}
-      <HeroOverlay isVisible={showHero} />
-      <ProblemOverlay isVisible={showProblem} />
-      <SolutionOverlay isVisible={showSolution} />
-      <FeaturesOverlay isVisible={showFeatures} />
-      <CTAOverlay isVisible={showCTA} />
+      {/* Content overlays - with smooth cross-fade transitions */}
+      <HeroOverlay
+        isVisible={heroProps.isVisible}
+        transitionOpacity={heroProps.transitionOpacity}
+        isPreloading={heroProps.isPreloading}
+        onNext={() => navigateToTextStep(1)}
+      />
+      <ProblemOverlay
+        isVisible={problemProps.isVisible}
+        transitionOpacity={problemProps.transitionOpacity}
+        isPreloading={problemProps.isPreloading}
+        onNext={() => navigateToTextStep(2)}
+      />
+      <SolutionOverlay
+        isVisible={solutionProps.isVisible}
+        transitionOpacity={solutionProps.transitionOpacity}
+        isPreloading={solutionProps.isPreloading}
+        onNext={() => navigateToTextStep(3)}
+      />
+      <FeaturesOverlay
+        isVisible={featuresProps.isVisible}
+        transitionOpacity={featuresProps.transitionOpacity}
+        isPreloading={featuresProps.isPreloading}
+        onNext={() => navigateToTextStep(4)}
+      />
+      <CTAOverlay
+        isVisible={ctaProps.isVisible}
+        transitionOpacity={ctaProps.transitionOpacity}
+        isPreloading={ctaProps.isPreloading}
+      />
 
       {/* Enhanced scroll hint with safe area support */}
       {stepConfig.type === 'text' && !isLocked && currentStep < totalSteps - 1 && (

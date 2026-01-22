@@ -1,8 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&display=swap');
 
-/* Fonts: Inter, Satoshi, Cabinet Grotesk (imported above) */
+/* Fonts: Inter, Satoshi, Cabinet Grotesk, Playfair Display, Space Grotesk, Syne */
+
+/* Font utility classes for highlights */
+.font-playfair { font-family: 'Playfair Display', Georgia, serif; }
+.font-space { font-family: 'Space Grotesk', sans-serif; }
+.font-syne { font-family: 'Syne', sans-serif; }
+.font-satoshi { font-family: 'Satoshi', sans-serif; }
+.font-cabinet { font-family: 'Cabinet Grotesk', sans-serif; }
 
 @tailwind base;
 @tailwind components;

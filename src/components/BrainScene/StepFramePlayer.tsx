@@ -227,7 +227,43 @@ export function StepFramePlayer({ currentStep, stepConfig, animationProgress, is
     }
   }, [stepConfig, animationProgress, frames, direction])
 
-  // Draw frame to canvas
+  // Track canvas dimensions to avoid unnecessary resizes
+  const canvasSizeRef = useRef({ width: 0, height: 0, dpr: 1 })
+
+  // Handle canvas resize separately (only on window resize)
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || isLoading) return
+
+    const resizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1
+      const width = window.innerWidth
+      const height = window.innerHeight
+
+      // Only resize if dimensions actually changed
+      if (
+        canvasSizeRef.current.width !== width ||
+        canvasSizeRef.current.height !== height ||
+        canvasSizeRef.current.dpr !== dpr
+      ) {
+        canvas.width = width * dpr
+        canvas.height = height * dpr
+        canvas.style.width = `${width}px`
+        canvas.style.height = `${height}px`
+
+        const ctx = canvas.getContext('2d')
+        if (ctx) ctx.scale(dpr, dpr)
+
+        canvasSizeRef.current = { width, height, dpr }
+      }
+    }
+
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+    return () => window.removeEventListener('resize', resizeCanvas)
+  }, [isLoading])
+
+  // Draw frame to canvas (separate from resize)
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || isLoading || !currentFrame) return
@@ -235,47 +271,30 @@ export function StepFramePlayer({ currentStep, stepConfig, animationProgress, is
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const draw = () => {
-      // Set canvas size to match window
-      const dpr = window.devicePixelRatio || 1
-      canvas.width = window.innerWidth * dpr
-      canvas.height = window.innerHeight * dpr
-      canvas.style.width = `${window.innerWidth}px`
-      canvas.style.height = `${window.innerHeight}px`
-      ctx.scale(dpr, dpr)
+    const { width, height } = canvasSizeRef.current
 
-      // Calculate cover fit
-      const imgRatio = currentFrame.width / currentFrame.height
-      const canvasRatio = window.innerWidth / window.innerHeight
+    // Calculate cover fit
+    const imgRatio = currentFrame.width / currentFrame.height
+    const canvasRatio = width / height
 
-      let drawWidth, drawHeight, drawX, drawY
+    let drawWidth, drawHeight, drawX, drawY
 
-      if (imgRatio > canvasRatio) {
-        drawHeight = window.innerHeight
-        drawWidth = drawHeight * imgRatio
-        drawX = (window.innerWidth - drawWidth) / 2
-        drawY = 0
-      } else {
-        drawWidth = window.innerWidth
-        drawHeight = drawWidth / imgRatio
-        drawX = 0
-        drawY = (window.innerHeight - drawHeight) / 2
-      }
-
-      // Clear and draw
-      ctx.fillStyle = '#050508'
-      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-      ctx.drawImage(currentFrame, drawX, drawY, drawWidth, drawHeight)
+    if (imgRatio > canvasRatio) {
+      drawHeight = height
+      drawWidth = drawHeight * imgRatio
+      drawX = (width - drawWidth) / 2
+      drawY = 0
+    } else {
+      drawWidth = width
+      drawHeight = drawWidth / imgRatio
+      drawX = 0
+      drawY = (height - drawHeight) / 2
     }
 
-    draw()
-
-    const handleResize = () => draw()
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    // Clear and draw
+    ctx.fillStyle = '#050508'
+    ctx.fillRect(0, 0, width, height)
+    ctx.drawImage(currentFrame, drawX, drawY, drawWidth, drawHeight)
   }, [currentFrame, isLoading])
 
   // Get glow color for current state

@@ -1,18 +1,20 @@
 import { motion } from 'framer-motion'
-import { BaseOverlay, AnimatedText, TextReveal } from './BaseOverlay'
+import { BaseOverlay, AnimatedText, TextReveal, TypewriterText } from './BaseOverlay'
 import { STATE_CONTENT, STATES } from '@/lib/constants'
 import { ArrowRight, Play, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface CTAOverlayProps {
   isVisible: boolean
+  transitionOpacity?: number
+  isPreloading?: boolean
 }
 
-export function CTAOverlay({ isVisible }: CTAOverlayProps) {
+export function CTAOverlay({ isVisible, transitionOpacity, isPreloading }: CTAOverlayProps) {
   const content = STATE_CONTENT[STATES.RADIANT]
 
   return (
-    <BaseOverlay isVisible={isVisible}>
+    <BaseOverlay isVisible={isVisible} transitionOpacity={transitionOpacity} isPreloading={isPreloading}>
       <div className="flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-3xl mx-auto">
         {/* Glowing orb with particles */}
         <AnimatedText delay={0} animation="scaleIn">
@@ -71,49 +73,85 @@ export function CTAOverlay({ isVisible }: CTAOverlayProps) {
           <TextReveal text={content.headline} delay={0.1} />
         </motion.h2>
 
-        {/* Subline */}
+        {/* Subline with typewriter effect */}
         <AnimatedText delay={0.3} animation="slideUp">
           <p className="text-xl sm:text-2xl text-white/80 mb-12 max-w-xl">
-            {content.subline}
+            <TypewriterText
+              text={content.subline}
+              delay={0.3}
+              speed={18}
+              highlights={[
+                { words: ['Transform'], color: '#a78bfa', fontClass: 'font-cabinet' },
+                { words: ['thoughts'], color: '#60a5fa', fontClass: 'font-playfair', italic: true },
+                { words: ['actionable'], color: '#34d399', fontClass: 'font-syne', uppercase: true },
+                { words: ['self-insight'], color: '#fbbf24', fontClass: 'font-space' },
+              ]}
+            />
           </p>
         </AnimatedText>
 
         {/* CTA Buttons */}
         <AnimatedText delay={0.4} animation="pop">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <motion.div
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
-                size="xl"
-                className="bg-white text-gray-900 hover:bg-gray-100 gap-2 px-8 py-6 text-lg font-semibold relative overflow-hidden group"
+          <div className="flex flex-col items-center gap-4">
+            {/* Primary row */}
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -3 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <motion.span
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                />
-                <span className="relative z-10 flex items-center gap-2">
-                  {content.cta}
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </Button>
-            </motion.div>
+                <a
+                  href="https://pratyaksha-963362833537.asia-south1.run.app/dashboard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button
+                    size="xl"
+                    className="bg-white text-gray-900 hover:bg-gray-100 gap-2 px-8 py-6 text-lg font-semibold relative overflow-hidden group"
+                  >
+                    <motion.span
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                    />
+                    <span className="relative z-10 flex items-center gap-2">
+                      Start Free
+                      <ArrowRight className="w-5 h-5" />
+                    </span>
+                  </Button>
+                </a>
+              </motion.div>
 
-            <motion.div
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
-                variant="outline"
-                size="xl"
-                className="border-white/30 text-white hover:bg-white/10 gap-2 px-8 py-6 text-lg"
+              <motion.div
+                whileHover={{ scale: 1.05, y: -3 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Play className="w-5 h-5" />
-                {content.secondaryCta}
-              </Button>
-            </motion.div>
+                <a
+                  href="https://pratyaksha-963362833537.asia-south1.run.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button
+                    variant="outline"
+                    size="xl"
+                    className="border-white/30 text-white hover:bg-white/10 gap-2 px-8 py-6 text-lg"
+                  >
+                    <Play className="w-5 h-5" />
+                    Watch Demo
+                  </Button>
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Secondary link */}
+            <motion.a
+              href="https://pratyaksha-963362833537.asia-south1.run.app/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-white/80 text-sm transition-colors"
+              whileHover={{ y: -1 }}
+            >
+              or explore the dashboard first →
+            </motion.a>
           </div>
         </AnimatedText>
 
